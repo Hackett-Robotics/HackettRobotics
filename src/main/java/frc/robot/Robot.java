@@ -121,7 +121,7 @@ public class Robot extends TimedRobot {
     double[] vernonDouglas= {0    , -1   ,-0.8 , -0.8, 0    , 0};  //Crane
     double[] samPound =     {-1   , 0    , 0   , 0   , 0    , 0};    //wench
     double autonTime;
-    */
+    
  
     //Main for loop
     for(int i = 0; i < 6; i++){
@@ -146,6 +146,7 @@ public class Robot extends TimedRobot {
     clawPH.set(false);
     crane.set(0);
     robotDrive.driveCartesian(0, 0, 0);
+     */
   }
 
   @Override
