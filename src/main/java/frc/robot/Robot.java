@@ -8,6 +8,7 @@ import javax.management.BadBinaryOpValueExpException;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.motorcontrol.*;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -30,7 +31,7 @@ public class Robot extends TimedRobot {
   
   Timer timer;
 
-  MecanumDrive robotDrive;
+  DifferentialDrive robotDrive;
 
   PWMVictorSPX crane, frontLeft, frontRight, backLeft, backRight, motor1, motor2;
 
@@ -72,7 +73,7 @@ public class Robot extends TimedRobot {
    MotorController m_rearRight = new PWMVictorSPX(4);
    MotorControllerGroup m_right = new MotorControllerGroup(m_frontRight, m_rearRight);
 
-   DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
+   DifferentialDrive robotDrive = new DifferentialDrive(m_left, m_right);
   }
 
 
@@ -83,8 +84,7 @@ public class Robot extends TimedRobot {
 
     robotDrive.setSafetyEnabled(false);
     double speedCap = .7;
-    double spinCap = .75;
-    robotDrive.driveCartesian(-speedCap*xbox1.getRawAxis(1), speedCap*xbox1.getRawAxis(0), speedCap*xbox1.getRawAxis(4));
+    robotDrive.tankDrive(-speedCap*xbox1.getRawAxis(1), speedCap*xbox1.getRawAxis(5));
 
 
   }
