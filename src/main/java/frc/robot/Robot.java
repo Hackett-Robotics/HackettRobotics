@@ -84,7 +84,7 @@ public class Robot extends TimedRobot {
 
     robotDrive.setSafetyEnabled(false);
     double speedCap = .7;
-    robotDrive.tankDrive(-speedCap*xbox1.getRawAxis(1), speedCap*xbox1.getRawAxis(5));
+    robotDrive.tankDrive(-speedCap*xbox1.getRawAxis(1), speedCap*xbox1.getRawAxis(2));
 
 
   }
@@ -99,7 +99,6 @@ public class Robot extends TimedRobot {
     timer = new Timer();
     timer.reset();
     timer.start();
-
     
     //Declaring variabled and arrays
     double[] xSpeed =       {0    , 0    , 0.5 , 0   , 0    , -0.5};
@@ -111,42 +110,6 @@ public class Robot extends TimedRobot {
     double[] samPound =     {-1   , 0    , 0   , 0   , 0    , 0};    //wench
     double autonTime;
     
-    /*
-    //Declaring variabled and arrays
-    double[] xSpeed =       {0    , 0    , 0.5 ,-0.2   , 0    , 0};
-    double[] ySpeed =       {0    , 0    , 0   , 0   , 0    , 0};
-    double[] zSpeed =       {0    , 0    , 0   , 0   , 0    , 0};
-    double[] timeIntevals = {2    , 1    , 1   , 0.5   , 0    , 0};
-    boolean[] lauraHuges =  {false,false ,false,true , true , true}; //Claw
-    double[] vernonDouglas= {0    , -1   ,-0.8 , -0.8, 0    , 0};  //Crane
-    double[] samPound =     {-1   , 0    , 0   , 0   , 0    , 0};    //wench
-    double autonTime;
-    
- 
-    //Main for loop
-    for(int i = 0; i < 6; i++){
-
-      //Sets the current time to autonTime
-      autonTime = timer.get();
-
-      //Runs in between the time intervals
-      while(timer.get() < autonTime + timeIntevals[i]){
-
-        //Drives the robot
-        robotDrive.driveCartesian(xSpeed[i], ySpeed[i], zSpeed[i]);
-
-        crane.set(samPound[i]);
-        clawPH.set(lauraHuges[i]);
-
-        motor1.set(vernonDouglas[i]);
-        motor2.set(vernonDouglas[i]);
-      }
-    }
-
-    clawPH.set(false);
-    crane.set(0);
-    robotDrive.driveCartesian(0, 0, 0);
-     */
   }
 
   @Override
