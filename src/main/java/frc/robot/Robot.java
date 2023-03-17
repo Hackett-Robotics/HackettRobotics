@@ -20,10 +20,6 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.cameraserver.CameraServer;
 
 
-/**
- * This is a demo program showing the use of the DifferentialDrive class, specifically it contains
- * the code necessary to operate a robot with tank drive.
- */
 public class Robot extends TimedRobot {
 
   Command m_autonomousCommand;
@@ -33,16 +29,13 @@ public class Robot extends TimedRobot {
 
   DifferentialDrive robotDrive;
 
-  PWMVictorSPX crane, frontLeft, frontRight, backLeft, backRight, motor1, motor2;
+  PWMVictorSPX crane1, crane2, frontLeft, frontRight, backLeft, backRight, motor1, motor2;
+
+  
+
 
   XboxController xbox1;
   XboxController xbox2;
-   
-
-  PWMVictorSPX shooterLeft;
-  PWMVictorSPX shooterRight;
-
-  PWMVictorSPX intake;
 
   Solenoid clawPH;
 
@@ -56,14 +49,6 @@ public class Robot extends TimedRobot {
     xbox1 = new XboxController(Constants.xboxController1);
     xbox2 = new XboxController(Constants.xboxController2);
     
-    //Define the motors to the robot as a thing on the robot
-    frontLeft = new PWMVictorSPX(Constants.leftFrontMotor);
-    frontRight = new PWMVictorSPX(Constants.rightFrontMotor);
-    backLeft = new PWMVictorSPX(Constants.leftBackMotor);
-    backRight = new PWMVictorSPX(Constants.rightBackMotor);
-    frontRight.setInverted(true);
-    backRight.setInverted(true);
-
   //Tells the robot that we are using a tank system
    MotorController m_frontLeft = new PWMVictorSPX(1);
    MotorController m_rearLeft = new PWMVictorSPX(2);
@@ -73,18 +58,26 @@ public class Robot extends TimedRobot {
    MotorController m_rearRight = new PWMVictorSPX(4);
    MotorControllerGroup m_right = new MotorControllerGroup(m_frontRight, m_rearRight);
 
-   DifferentialDrive robotDrive = new DifferentialDrive(m_left, m_right);
+
+   /* 
+  MotorController m_crane1 = new PWMVictorSPX(5);
+  MotorController m_crane2 = new PWMVictorSPX(6);
+  MotorControllerGroup crane = new MotorControllerGroup(m_crane1, m_crane2);
+  */
+
+  robotDrive = new DifferentialDrive(m_left, m_right);
   }
 
 
   boolean clawCon = true;
-
   @Override
   public void teleopPeriodic() {
 
-    robotDrive.setSafetyEnabled(false);
-    double speedCap = .7;
-    robotDrive.tankDrive(-speedCap*xbox1.getRawAxis(1), speedCap*xbox1.getRawAxis(2));
+    double speedCap = 1;
+    robotDrive.tankDrive(-speedCap*xbox1.getRawAxis(1), speedCap*xbox1.getRawAxis(5));
+
+    crane1.set(xbox1.getLeftTriggerAxis());
+    crane2.set(xbox1.getLeftTriggerAxis());
 
 
   }
