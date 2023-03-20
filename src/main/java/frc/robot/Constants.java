@@ -2,11 +2,7 @@ package frc.robot;
 
 public class Constants {
 
-    //Tells the program that there are shooter motors connected to their respective victors (the ports on the RoboRio)
-    
-    //Tells the program that there is a motor connected to this victor (the ports on the RoboRio)
-    
-    //Tells the program that there are two different controllers connected
+    //Controller numbers
     public static final int xboxController1 = 0;
     public static final int xboxController2 = 1;
 
@@ -17,4 +13,11 @@ public class Constants {
     //Right motor group
     public final static int rightDriver1 = 3;
     public final static int rightDriver2 = 4;
+
+    //Crane motor group
+    public final static int mc_crane1 = 5;
+    public final static int mc_crane2 = 6;
+
+    //Intake Victor
+    public final static int mc_intake = 2;
 }
