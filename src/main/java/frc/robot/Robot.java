@@ -4,19 +4,13 @@
 
 package frc.robot;
 
-import javax.management.BadBinaryOpValueExpException;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.motorcontrol.*;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.cameraserver.CameraServer;
 
 public class Robot extends TimedRobot {
@@ -28,14 +22,13 @@ public class Robot extends TimedRobot {
 
   DifferentialDrive robotDrive;
 
-  PWMVictorSPX crane1, crane2, frontLeft, frontRight, backLeft, backRight, motor1, motor2, intake, m_crane1, m_crane2;
-
+  PWMVictorSPX intake;
   MotorControllerGroup crane;
 
   XboxController xbox1;
   XboxController xbox2;
 
-  Solenoid clawPH;
+
 
   @Override
   public void robotInit() {
@@ -47,34 +40,41 @@ public class Robot extends TimedRobot {
     xbox1 = new XboxController(Constants.xboxController1);
     xbox2 = new XboxController(Constants.xboxController2);
 
-    // Tells the robot that we are using a tank system
+    //Defined the left side of the robot drive and collapses them into a single object
     MotorController m_frontLeft = new PWMVictorSPX(Constants.leftDriver1);
     MotorController m_rearLeft = new PWMVictorSPX(Constants.leftDriver2);
     MotorControllerGroup m_left = new MotorControllerGroup(m_frontLeft, m_rearLeft);
 
+    //Defined the right side of the robot drive and collapses them into a single object
     MotorController m_frontRight = new PWMVictorSPX(Constants.rightDriver1);
     MotorController m_rearRight = new PWMVictorSPX(Constants.rightDriver2);
     MotorControllerGroup m_right = new MotorControllerGroup(m_frontRight, m_rearRight);
 
-    MotorController m_crane1 = new PWMVictorSPX(5);
-    MotorController m_crane2 = new PWMVictorSPX(6);
+    //Defines crane motor controllers and collapses them into one group
+    MotorController m_crane1 = new PWMVictorSPX(Constants.mc_crane1);
+    MotorController m_crane2 = new PWMVictorSPX(Constants.mc_crane2);
     crane = new MotorControllerGroup(m_crane1, m_crane2);
 
-    intake = new PWMVictorSPX(7);
+    //Defines intake motor
+    intake = new PWMVictorSPX(Constants.mc_intake);
 
+    //Defines drive setup
     robotDrive = new DifferentialDrive(m_left, m_right);
   }
 
-  boolean clawCon = true;
-  int intakeGo = 0;
+  //Sets the intake off at the start, keep global
+  double intakeCon = 0;
 
   @Override
   public void teleopPeriodic() {
 
-    double speedCap = 1;
-    robotDrive.tankDrive(-speedCap * xbox1.getRawAxis(1), speedCap * xbox1.getRawAxis(5));
+    double speedCap = 1;  //Sets speed cap multiplier
+    double craneCap = 0.5;  //Crane speed cap (keep low)
 
-    double craneCap = 0.5;
+    //Sends controller axis information to the drive methods
+    robotDrive.arcadeDrive(speedCap * xbox1.getRawAxis(Constants.rightSide), speedCap * xbox1.getRawAxis(Constants.leftUp));
+
+    //Sets crane up for left trigger, down for right trigger
     if(xbox1.getLeftTriggerAxis() != 0.0){
       crane.set(craneCap * xbox1.getLeftTriggerAxis());
     }
@@ -83,16 +83,17 @@ public class Robot extends TimedRobot {
     }
     
 
-    
-    if (xbox1.getAButtonReleased()) {
-      if (intakeGo == 0) {
-        intakeGo = 1;
-      } else {
-        intakeGo = 0;
-      }
+    if(xbox1.getAButton())
+    {
+      intake.set(1);
     }
-    intake.set(intakeGo);
-    
+    else if(xbox1.getBButton())
+    {
+      intake.set(-1);
+    }
+    else{
+      intake.stopMotor();
+    }
 
   }
 
@@ -100,6 +101,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     // m_autonomousCommand = m_chooser.getSelected();
 
+    //Idk what this does
     robotDrive.setSafetyEnabled(false);
 
     // Starts timer object
@@ -108,15 +110,35 @@ public class Robot extends TimedRobot {
     timer.start();
 
     // Declaring variabled and arrays
-    double[] xSpeed = { 0, 0, 0.5, 0, 0, -0.5 };
-    double[] ySpeed = { 0, 0, 0, 0, 0, 0 };
-    double[] zSpeed = { 0, 0, 0, 0, 0, 0 };
-    double[] timeIntevals = { 2, 1, 1, 1, 0, 3 };
-    boolean[] lauraHuges = { false, false, false, true, true, true }; // Claw
-    double[] vernonDouglas = { 0, -1, -0.5, -0.5, 0, 0 }; // Crane
-    double[] samPound = { -1, 0, 0, 0, 0, 0 }; // wench
+    double[] fowardSpeed =  { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; //Foward
+    double[] angle =        { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; // Angle
+    double[] timeIntevals = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; // Time
+    double[] in =           { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; // Intake
+    double[] flipper =      { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; // Flipper
     double autonTime;
 
+    //Main for loop
+    for(int i = 0; i < 6; i++){
+
+      //Sets the current time to autonTime
+      autonTime = timer.get();
+
+      //Runs in between the time intervals
+      while(timer.get() < autonTime + timeIntevals[i])
+      {
+
+        //Drives the robot
+        robotDrive.arcadeDrive(fowardSpeed[i], angle[i]);
+
+        //Controls the motors for the intake and crane
+        crane.set(flipper[i]);
+        intake.set(in[i]);
+      }
+    }
+
+    crane.set(0);
+    intake.set(0);
+    robotDrive.arcadeDrive(0, 0);
   }
 
   @Override

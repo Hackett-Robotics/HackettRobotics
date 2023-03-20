@@ -20,4 +20,11 @@ public class Constants {
 
     //Intake Victor
     public final static int mc_intake = 2;
+
+    //Controller Axese
+    public final static int leftUp = 1;
+    public final static int leftSide = 0;
+    public final static int rightUp = 5;
+    public final static int rightSide = 4;
+
 }
