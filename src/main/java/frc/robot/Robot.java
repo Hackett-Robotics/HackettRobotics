@@ -110,15 +110,17 @@ public class Robot extends TimedRobot {
     timer.start();
 
     // Declaring variabled and arrays
-    double[] fowardSpeed =  { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; //Foward
+    double[] fowardSpeed =  { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; // Foward
     double[] angle =        { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; // Angle
     double[] timeIntevals = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; // Time
     double[] in =           { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; // Intake
     double[] flipper =      { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; // Flipper
+
+    //dont touch
     double autonTime;
 
     //Main for loop
-    for(int i = 0; i < 6; i++){
+    for(int i = 0; i < timeIntevals.length; i++){
 
       //Sets the current time to autonTime
       autonTime = timer.get();
@@ -128,7 +130,7 @@ public class Robot extends TimedRobot {
       {
 
         //Drives the robot
-        robotDrive.arcadeDrive(fowardSpeed[i], angle[i]);
+        robotDrive.arcadeDrive(angle[i], fowardSpeed[i]);
 
         //Controls the motors for the intake and crane
         crane.set(flipper[i]);
