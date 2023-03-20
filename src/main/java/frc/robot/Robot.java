@@ -69,7 +69,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
 
     double speedCap = 1;  //Sets speed cap multiplier
-    double craneCap = 0.5;  //Crane speed cap (keep low)
+    double craneCap = 0.45;  //Crane speed cap (keep low)
 
     //Sends controller axis information to the drive methods
     robotDrive.arcadeDrive(speedCap * xbox1.getRawAxis(Constants.rightSide), speedCap * xbox1.getRawAxis(Constants.leftUp));
