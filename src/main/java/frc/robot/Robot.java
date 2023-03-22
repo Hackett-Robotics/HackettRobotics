@@ -2,8 +2,10 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+//Imports frc robot package
 package frc.robot;
 
+//Imports necessary libraries
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.motorcontrol.*;
 import edu.wpi.first.wpilibj.XboxController;
@@ -13,32 +15,36 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.cameraserver.CameraServer;
 
+//Instigates robot class
 public class Robot extends TimedRobot {
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
+  //Declaring timer object for autonamous
   Timer timer;
 
+  //Creates a robot drive object for DD
   DifferentialDrive robotDrive;
 
+  //Declaring Victor controllers
   PWMVictorSPX intake;
   MotorControllerGroup crane;
 
+  //Declaring Xbox controller input
   XboxController xbox1;
   XboxController xbox2;
 
-
-
+  //Robot init method runs pre-operation
   @Override
   public void robotInit() {
 
     // Starts camera
     CameraServer.startAutomaticCapture();
 
-    // Define the different controllers as seperate and distinct inputs
+    //Define the different controllers as seperate inputs
     xbox1 = new XboxController(Constants.xboxController1);
-    xbox2 = new XboxController(Constants.xboxController2);
+    //xbox2 = new XboxController(Constants.xboxController2);
 
     //Defined the left side of the robot drive and collapses them into a single object
     MotorController m_frontLeft = new PWMVictorSPX(Constants.leftDriver1);
@@ -65,6 +71,7 @@ public class Robot extends TimedRobot {
   //Sets the intake off at the start, keep global
   double intakeCon = 0;
 
+  //Method runs over and over throughout teleop
   @Override
   public void teleopPeriodic() {
 
@@ -96,7 +103,8 @@ public class Robot extends TimedRobot {
     }
 
   }
-
+  
+  //Runs once at the start of autonamous
   @Override
   public void autonomousInit() {
     // m_autonomousCommand = m_chooser.getSelected();
@@ -145,18 +153,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    /*
-     * robotDrive.driveCartesian(0, -0.25, 0);
-     * Timer.delay(1);
-     * robotDrive.driveCartesian(0, 0, 0);
-     * /*
-     * /*
-     * String autoSelected = SmartDashboard.getString("Auto Selector",
-     * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-     * = new MyAutoCommand(); break; case "Default Auto": default:
-     * autonomousCommand = new ExampleCommand(); break; }
-     */
-
+    //lol we dont use this one
   }
 
 }
