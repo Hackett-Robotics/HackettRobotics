@@ -29,7 +29,13 @@ public class Robot extends TimedRobot {
 
   //Declaring Victor controllers
   PWMVictorSPX intake;
-  MotorControllerGroup crane;
+  PWMMotorController m_frontLeft;
+  PWMMotorController m_rearLeft;
+  PWMMotorController m_frontRight;
+  PWMMotorController m_rearRight;
+  PWMMotorController m_crane2; 
+  PWMMotorController m_crane1; 
+
 
   //Declaring Xbox controller input
   XboxController xbox1;
@@ -47,25 +53,25 @@ public class Robot extends TimedRobot {
     //xbox2 = new XboxController(Constants.xboxController2);
 
     //Defined the left side of the robot drive and collapses them into a single object
-    MotorController m_frontLeft = new PWMVictorSPX(Constants.leftDriver1);
-    MotorController m_rearLeft = new PWMVictorSPX(Constants.leftDriver2);
-    MotorControllerGroup m_left = new MotorControllerGroup(m_frontLeft, m_rearLeft);
+    m_frontLeft = new PWMVictorSPX(Constants.leftDriver1);
+    m_rearLeft = new PWMVictorSPX(Constants.leftDriver2);
+    m_frontLeft.addFollower(m_rearLeft);
 
     //Defined the right side of the robot drive and collapses them into a single object
-    MotorController m_frontRight = new PWMVictorSPX(Constants.rightDriver1);
-    MotorController m_rearRight = new PWMVictorSPX(Constants.rightDriver2);
-    MotorControllerGroup m_right = new MotorControllerGroup(m_frontRight, m_rearRight);
+    m_frontRight = new PWMVictorSPX(Constants.rightDriver1);
+    m_rearRight = new PWMVictorSPX(Constants.rightDriver2);
+    m_frontRight.addFollower(m_rearRight);
 
     //Defines crane motor controllers and collapses them into one group
-    MotorController m_crane1 = new PWMVictorSPX(Constants.mc_crane1);
-    MotorController m_crane2 = new PWMVictorSPX(Constants.mc_crane2);
-    crane = new MotorControllerGroup(m_crane1, m_crane2);
+    m_crane1 = new PWMVictorSPX(Constants.mc_crane1);
+    m_crane2 = new PWMVictorSPX(Constants.mc_crane2);
+    m_crane1.addFollower(m_crane2);
 
     //Defines intake motor
     intake = new PWMVictorSPX(Constants.mc_intake);
 
     //Defines drive setup
-    robotDrive = new DifferentialDrive(m_left, m_right);
+    robotDrive = new DifferentialDrive(m_frontLeft, m_frontRight);
   }
 
   //Sets the intake off at the start, keep global
@@ -83,10 +89,10 @@ public class Robot extends TimedRobot {
 
     //Sets crane up for left trigger, down for right trigger
     if(xbox1.getLeftTriggerAxis() != 0.0){
-      crane.set(craneCap * xbox1.getLeftTriggerAxis());
+      m_crane1.set(craneCap * xbox1.getLeftTriggerAxis());
     }
     else if(xbox1.getRightTriggerAxis() != 0.0){
-      crane.set(craneCap * -xbox1.getRightTriggerAxis());
+      m_crane1.set(craneCap * -xbox1.getRightTriggerAxis());
     }
     
 
@@ -141,12 +147,12 @@ public class Robot extends TimedRobot {
         robotDrive.arcadeDrive(angle[i], fowardSpeed[i]);
 
         //Controls the motors for the intake and crane
-        crane.set(flipper[i]);
+        m_crane1.set(flipper[i]);
         intake.set(in[i]);
       }
     }
 
-    crane.set(0);
+    m_crane1.set(0);
     intake.set(0);
     robotDrive.arcadeDrive(0, 0);
   }
