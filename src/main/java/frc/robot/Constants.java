@@ -7,12 +7,12 @@ public class Constants {
     public static final int xboxController2 = 1;
 
     //Left motor group
-    public static final int leftDriver1 = 0;
-    public final static int leftDriver2 = 1;
+    public static final int leftDriver1 = 3;
+    public final static int leftDriver2 = 4;
 
     //Right motor group
-    public final static int rightDriver1 = 3;
-    public final static int rightDriver2 = 4;
+    public final static int rightDriver1 = 1;
+    public final static int rightDriver2 = 2;
 
     //Crane motor group
     public final static int mc_crane1 = 5;

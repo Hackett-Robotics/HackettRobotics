@@ -15,6 +15,10 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.cameraserver.CameraServer;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+
 //Instigates robot class
 public class Robot extends TimedRobot {
 
@@ -36,6 +40,7 @@ public class Robot extends TimedRobot {
   PWMMotorController m_crane2; 
   PWMMotorController m_crane1; 
 
+  Spark craneLeft;
 
   //Declaring Xbox controller input
   XboxController xbox1;
@@ -46,7 +51,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
 
     // Starts camera
-    CameraServer.startAutomaticCapture();
+    // CameraServer.startAutomaticCapture();
 
     //Define the different controllers as seperate inputs
     xbox1 = new XboxController(Constants.xboxController1);
@@ -62,13 +67,19 @@ public class Robot extends TimedRobot {
     m_rearRight = new PWMVictorSPX(Constants.rightDriver2);
     m_frontRight.addFollower(m_rearRight);
 
+    Spark craneLeft = new Spark(5);
+    //Spark craneRight = new Spark(0);
+
+
+    /* 
     //Defines crane motor controllers and collapses them into one group
     m_crane1 = new PWMVictorSPX(Constants.mc_crane1);
     m_crane2 = new PWMVictorSPX(Constants.mc_crane2);
     m_crane1.addFollower(m_crane2);
 
     //Defines intake motor
-    intake = new PWMVictorSPX(Constants.mc_intake);
+    //intake = new PWMVictorSPX(Constants.mc_intake);
+    */
 
     //Defines drive setup
     robotDrive = new DifferentialDrive(m_frontLeft, m_frontRight);
@@ -82,11 +93,13 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
 
     double speedCap = 1;  //Sets speed cap multiplier
-    double craneCap = 0.45;  //Crane speed cap (keep low)
 
     //Sends controller axis information to the drive methods
-    robotDrive.arcadeDrive(speedCap * xbox1.getRawAxis(Constants.rightSide), speedCap * xbox1.getRawAxis(Constants.leftUp));
+    robotDrive.arcadeDrive(speedCap * xbox1.getRawAxis(Constants.leftSide), speedCap * xbox1.getRawAxis(Constants.leftUp));
 
+    craneLeft.set(0.02);
+
+    /*
     //Sets crane up for left trigger, down for right trigger
     if(xbox1.getLeftTriggerAxis() != 0.0){
       m_crane1.set(craneCap * xbox1.getLeftTriggerAxis());
@@ -107,7 +120,7 @@ public class Robot extends TimedRobot {
     else{
       intake.stopMotor();
     }
-
+    */
   }
   
   //Runs once at the start of autonamous
@@ -145,10 +158,12 @@ public class Robot extends TimedRobot {
 
         //Drives the robot
         robotDrive.arcadeDrive(angle[i], fowardSpeed[i]);
-
+        
+        /*
         //Controls the motors for the intake and crane
         m_crane1.set(flipper[i]);
         intake.set(in[i]);
+        */
       }
     }
 
