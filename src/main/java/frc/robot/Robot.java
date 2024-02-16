@@ -16,7 +16,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.cameraserver.CameraServer;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+
 
 
 //Instigates robot class
@@ -40,6 +42,7 @@ public class Robot extends TimedRobot {
   PWMMotorController m_crane2; 
   PWMMotorController m_crane1; 
 
+  //CANSparkMax craneLeft;
   Spark craneLeft;
 
   //Declaring Xbox controller input
@@ -67,8 +70,13 @@ public class Robot extends TimedRobot {
     m_rearRight = new PWMVictorSPX(Constants.rightDriver2);
     m_frontRight.addFollower(m_rearRight);
 
+
+    
+    //craneLeft = new CANSparkMax(5, CANSparkLowLevel.MotorType(0));
+    //m_followMotor = new CANSparkMax(followDeviceID);
+    
     Spark craneLeft = new Spark(5);
-    //Spark craneRight = new Spark(0);
+    //Spark craneRight = new Spark(6);
 
 
     /* 
@@ -93,22 +101,20 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
 
     double speedCap = 1;  //Sets speed cap multiplier
+    double craneCap = 0.2;
 
     //Sends controller axis information to the drive methods
     robotDrive.arcadeDrive(speedCap * xbox1.getRawAxis(Constants.leftSide), speedCap * xbox1.getRawAxis(Constants.leftUp));
 
-    craneLeft.set(0.02);
-
-    /*
     //Sets crane up for left trigger, down for right trigger
     if(xbox1.getLeftTriggerAxis() != 0.0){
-      m_crane1.set(craneCap * xbox1.getLeftTriggerAxis());
+      craneLeft.set(craneCap * xbox1.getLeftTriggerAxis());
     }
     else if(xbox1.getRightTriggerAxis() != 0.0){
-      m_crane1.set(craneCap * -xbox1.getRightTriggerAxis());
+      craneLeft.set(craneCap * -xbox1.getRightTriggerAxis());
     }
     
-
+    /* 
     if(xbox1.getAButton())
     {
       intake.set(1);
